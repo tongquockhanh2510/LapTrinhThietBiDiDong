@@ -2,6 +2,7 @@ function hello(name: string): string {
   return `Hello, ${name}!`;
 }
 
+import { Car } from "./Car";
 import { Person } from "./Person";
 import { Student } from "./Student";
 console.log(hello("200Lab"));
@@ -10,3 +11,6 @@ console.log(hello("200Lab"));
 
  const student = new Student( "khanh",12 ,12);
  student.displayInfo();
+
+ const car = new Car("Toyota", "mored", 12)
+ car.showCarInfor();
