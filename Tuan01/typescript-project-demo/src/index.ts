@@ -8,6 +8,7 @@ import { Student } from "./Student";
 import { Retangle } from "./Rectangle";
 import { BankAccount } from "./BankAccount";
 import { Product } from "./Product";
+import { Account } from "./Account";
 console.log(hello("200Lab"));
 //  const person1 = new Person("Khanh",18);
 //  person1.displayInfo();
@@ -34,3 +35,6 @@ const products : Product[] =[
 const filteredProducts = products.filter(product => product.price>100)
 console.log("San pham co gia >100")
 filteredProducts.forEach(console.log)
+
+const account1 = new Account(12345, 1234,"TongQuocKhanh");
+console.log(account1)

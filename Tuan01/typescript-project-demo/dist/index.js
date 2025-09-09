@@ -4,6 +4,7 @@ function hello(name) {
     return `Hello, ${name}!`;
 }
 const Product_1 = require("./Product");
+const Account_1 = require("./Account");
 console.log(hello("200Lab"));
 //  const person1 = new Person("Khanh",18);
 //  person1.displayInfo();
@@ -23,4 +24,6 @@ const products = [
 ];
 const filteredProducts = products.filter(product => product.price > 100);
 console.log("San pham co gia >100");
-filteredProducts.forEach( product => console.log(product));
+filteredProducts.forEach(console.log);
+const account1 = new Account_1.Account(12345, 1234, "TongQuocKhanh");
+console.log(account1);
