@@ -36,6 +36,7 @@ import { Movable } from "./Movable";
 import { Robot } from "./Robot";
 import { Order } from "./Order";
 import { Teacher } from "./Teacher";
+import { School } from "./School";
 import { Appliance } from "./Appliance";
 import { Fan } from "./Fan";
 import { AirConditioner } from "./AirConditioner";
@@ -202,3 +203,9 @@ console.log("Order total:", order.totalPrice());
 const teacher = new Teacher("Ms. Lan", 30, "Mathematics");
 teacher.introduce();
 teacher.displayInfo();
+
+// School example
+const school = new School();
+school.addTeacher(teacher);
+school.addStudent(student);
+school.displayInfo();

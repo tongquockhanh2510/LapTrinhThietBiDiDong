@@ -34,6 +34,7 @@ const CardPayment_1 = require("./CardPayment");
 const Robot_1 = require("./Robot");
 const Order_1 = require("./Order");
 const Teacher_1 = require("./Teacher");
+const School_1 = require("./School");
 const Fan_1 = require("./Fan");
 const AirConditioner_1 = require("./AirConditioner");
 console.log(hello("200Lab"));
@@ -160,3 +161,8 @@ console.log("Order total:", order.totalPrice());
 const teacher = new Teacher_1.Teacher("Ms. Lan", 30, "Mathematics");
 teacher.introduce();
 teacher.displayInfo();
+// School example
+const school = new School_1.School();
+school.addTeacher(teacher);
+school.addStudent(student);
+school.displayInfo();
