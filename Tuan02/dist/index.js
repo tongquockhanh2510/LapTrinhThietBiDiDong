@@ -11,7 +11,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 function hello(name) {
     return `Hello, ${name}!`;
 }
-console.log(hello("200Lab"));
 const helloAsync = new Promise((resolve) => {
     setTimeout(() => resolve("Hello Async"), 2000);
 });
@@ -21,7 +20,6 @@ function runAsync() {
         console.log(result);
     });
 }
-runAsync();
 function getTenAsync() {
     return new Promise((resolve) => {
         setTimeout(() => resolve(10), 1000);
@@ -75,6 +73,17 @@ function simulate(time) {
 // getRandomNumber()
 // .then((num) => console.log(`Random number: ${num}`))
 // .catch((err) => console.error((err as Error).message));
-simulate(2000)
-    .then((message) => console.log(message))
-    .catch((err) => console.error(err));
+// simulate(2000)
+//     .then((message)=>console.log(message))
+//     .catch((err)=> console.error(err))
+const tasks1 = simulate(2000);
+const tasks2 = getRandomNumber();
+const tasks3 = simulate(1000);
+Promise.all([tasks1, tasks2, tasks3])
+    .then((results) => {
+    console.log("All tasks completed");
+    console.log(results);
+}).catch((err) => {
+    console.error("One of the tasks failed");
+    console.error(err.message);
+});
