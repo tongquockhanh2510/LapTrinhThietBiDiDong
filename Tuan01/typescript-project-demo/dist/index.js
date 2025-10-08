@@ -21,6 +21,7 @@ const Developer_1 = require("./Developer");
 const Library_1 = require("./Library");
 const Book_1 = require("./Book");
 const User_1 = require("./User");
+const Box_1 = require("./Box");
 // Basic greeting
 console.log(hello("200Lab"));
 // Person example
@@ -83,3 +84,8 @@ console.log("Library books:");
 library.listBooks().forEach(b => console.log(`${b.title} by ${b.author} (${b.year})`));
 const found = library.findBookByTitle("Learning JS");
 console.log("Found:", found ? found.title : "Not found");
+// Box (generic) examples
+const numberBox = new Box_1.Box(42);
+console.log("Box contains number:", numberBox.get());
+const stringBox = new Box_1.Box("hello box");
+console.log("Box contains string:", stringBox.get());

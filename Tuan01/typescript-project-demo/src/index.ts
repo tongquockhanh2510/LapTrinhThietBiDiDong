@@ -20,6 +20,7 @@ import { Developer } from "./Developer";
 import { Library } from "./Library";
 import { Book } from "./Book";
 import { User } from "./User";
+import { Box } from "./Box";
 
 // Basic greeting
 console.log(hello("200Lab"));
@@ -102,3 +103,10 @@ library.listBooks().forEach(b => console.log(`${b.title} by ${b.author} (${b.yea
 
 const found = library.findBookByTitle("Learning JS");
 console.log("Found:", found ? found.title : "Not found");
+
+// Box (generic) examples
+const numberBox = new Box<number>(42);
+console.log("Box contains number:", numberBox.get());
+
+const stringBox = new Box<string>("hello box");
+console.log("Box contains string:", stringBox.get());
