@@ -24,6 +24,8 @@ import { User } from "./User";
 import { Box } from "./Box";
 import { Logger } from "./Logger";
 import { MathUtil } from "./MathUtil";
+import { Bike } from "./Bike";
+import { Vehicle } from "./Vehicle";
 
 // Basic greeting
 console.log(hello("200Lab"));
@@ -130,3 +132,12 @@ console.log("Math divide:", MathUtil.divide(10, 2));
 // Polymorphism demo: treat Dog and Cat as Animal and call speak()
 const animals: Animal[] = [new Dog("Rex"), new Cat("Mimi"), new Animal("Generic")];
 animals.forEach(a => a.speak());
+
+// Vehicle demo: Car and Bike implement Vehicle
+const bike = new Bike("Giant", "mountain");
+bike.start();
+bike.stop();
+console.log(bike.getInfo());
+
+const vehicles: Vehicle[] = [car, bike];
+vehicles.forEach(v => console.log(v.getInfo()));

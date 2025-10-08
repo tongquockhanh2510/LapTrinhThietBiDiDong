@@ -25,6 +25,7 @@ const User_1 = require("./User");
 const Box_1 = require("./Box");
 const Logger_1 = require("./Logger");
 const MathUtil_1 = require("./MathUtil");
+const Bike_1 = require("./Bike");
 // Basic greeting
 console.log(hello("200Lab"));
 // Person example
@@ -106,3 +107,10 @@ console.log("Math divide:", MathUtil_1.MathUtil.divide(10, 2));
 // Polymorphism demo: treat Dog and Cat as Animal and call speak()
 const animals = [new Dog_1.Dog("Rex"), new Cat_1.Cat("Mimi"), new Animal_1.Animal("Generic")];
 animals.forEach(a => a.speak());
+// Vehicle demo: Car and Bike implement Vehicle
+const bike = new Bike_1.Bike("Giant", "mountain");
+bike.start();
+bike.stop();
+console.log(bike.getInfo());
+const vehicles = [car, bike];
+vehicles.forEach(v => console.log(v.getInfo()));

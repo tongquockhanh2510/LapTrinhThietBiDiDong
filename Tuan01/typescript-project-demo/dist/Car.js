@@ -10,5 +10,14 @@ class Car {
     showCarInfor() {
         console.log(`Brand : ${this.brand}  Model :${this.model}  Year: ${this.year}`);
     }
+    start() {
+        console.log(`${this.brand} started.`);
+    }
+    stop() {
+        console.log(`${this.brand} stopped.`);
+    }
+    getInfo() {
+        return `Brand: ${this.brand}, Model: ${this.model}, Year: ${this.year}`;
+    }
 }
 exports.Car = Car;
