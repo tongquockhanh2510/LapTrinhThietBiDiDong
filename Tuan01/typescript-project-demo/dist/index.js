@@ -30,6 +30,8 @@ const Repository_1 = require("./Repository");
 const Stack_1 = require("./Stack");
 const CashPayment_1 = require("./CashPayment");
 const CardPayment_1 = require("./CardPayment");
+const Fan_1 = require("./Fan");
+const AirConditioner_1 = require("./AirConditioner");
 // Basic greeting
 console.log(hello("200Lab"));
 // Person example
@@ -138,3 +140,8 @@ const cash = new CashPayment_1.CashPayment();
 cash.pay(50);
 const card = new CardPayment_1.CardPayment("1234567812345678");
 card.pay(120.5);
+// Appliance examples
+const fan = new Fan_1.Fan("Living Room Fan", 3);
+fan.turnOn();
+const ac = new AirConditioner_1.AirConditioner("Bedroom AC", 22);
+ac.turnOn();

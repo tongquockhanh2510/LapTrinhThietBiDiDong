@@ -31,6 +31,9 @@ import { Stack } from "./Stack";
 import { Payment } from "./Payment";
 import { CashPayment } from "./CashPayment";
 import { CardPayment } from "./CardPayment";
+import { Appliance } from "./Appliance";
+import { Fan } from "./Fan";
+import { AirConditioner } from "./AirConditioner";
 
 // Basic greeting
 console.log(hello("200Lab"));
@@ -171,3 +174,10 @@ cash.pay(50);
 
 const card: Payment = new CardPayment("1234567812345678");
 card.pay(120.5);
+
+// Appliance examples
+const fan = new Fan("Living Room Fan", 3);
+fan.turnOn();
+
+const ac = new AirConditioner("Bedroom AC", 22);
+ac.turnOn();
