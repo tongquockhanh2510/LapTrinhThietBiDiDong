@@ -63,8 +63,18 @@ function getRandomNumber() {
         }, 1000);
     });
 }
+function simulate(time) {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve("Task done");
+        }, time);
+    });
+}
 // runNumberAsync();
 // runRejectAsync();
-getRandomNumber()
-    .then((num) => console.log(`Random number: ${num}`))
-    .catch((err) => console.error(err.message));
+// getRandomNumber()
+// .then((num) => console.log(`Random number: ${num}`))
+// .catch((err) => console.error((err as Error).message));
+simulate(2000)
+    .then((message) => console.log(message))
+    .catch((err) => console.error(err));
