@@ -11,6 +11,8 @@ import { Product } from "./Product";
 import { Account } from "./Account";
 import { Dog } from "./Dog";
 import { Cat } from "./Cat";
+import { Fish } from "./Fish";
+import { Bird } from "./Bird";
 console.log(hello("200Lab"));
 //  const person1 = new Person("Khanh",18);
 //  person1.displayInfo();
@@ -29,21 +31,25 @@ console.log(hello("200Lab"));
 // console.log("tiền gửi là :"+bankAccount.deposit(12))
 // console.log("tiền rút là :"+ bankAccount.withdraw(12))
 
-const products : Product[] =[
-  new Product("Laptop", 1500),
-  new Product("xe dap", 12300),
-  new Product("dien thoai", 12)
-];
-const filteredProducts = products.filter(product => product.price>100)
-console.log("San pham co gia >100")
-filteredProducts.forEach(console.log)
+// const products : Product[] =[
+//   new Product("Laptop", 1500),
+//   new Product("xe dap", 12300),
+//   new Product("dien thoai", 12)
+// ];
+// const filteredProducts = products.filter(product => product.price>100)
+// console.log("San pham co gia >100")
+// filteredProducts.forEach(console.log)
 
-const account1 = new Account(12345, 1234,"TongQuocKhanh");
-console.log(account1)
+// const account1 = new Account(12345, 1234,"TongQuocKhanh");
+// console.log(account1)
 
-// Demo: Animal subclasses
-const dog = new Dog("Rex");
-dog.bark();
 
-const cat = new Cat("Mimi");
-cat.meow();
+// const dog = new Dog("Rex");
+// dog.bark();
+
+// const cat = new Cat("Mimi");
+// cat.meow();
+const fish = new Fish();  
+fish.swim();  
+const bird = new Bird();
+bird.fly(); 
