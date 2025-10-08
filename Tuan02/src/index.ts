@@ -42,10 +42,25 @@ async function runRejectAsync() {
   try {
     await rejectAfter1Second();
   } catch (err) {
-    // Log only the error message to show the rejection
     console.error((err as Error).message);
   }
 }
 
-runNumberAsync();
-runRejectAsync();
+function getRandomNumber(): Promise<number>{
+    return new Promise((resolve, reject)=>{
+        const num = Math.random();
+        setTimeout(()=>{
+            if(num> 0.5){
+                resolve(num);
+            } else {
+                reject(new Error("Number is less than 0.5"));
+            }
+        },1000);
+    });
+}
+
+// runNumberAsync();
+// runRejectAsync();
+getRandomNumber()
+.then((num) => console.log(`Random number: ${num}`))
+.catch((err) => console.error((err as Error).message));
