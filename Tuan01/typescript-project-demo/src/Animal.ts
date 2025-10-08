@@ -5,7 +5,12 @@ export class Animal {
     this.name = name;
   }
 
+  // protected method intended to be overridden by subclasses
+  protected makeSound(): string {
+    return "makes a sound.";
+  }
+
   speak(): void {
-    console.log(`${this.name} makes a sound.`);
+    console.log(`${this.name} ${this.makeSound()}`);
   }
 }

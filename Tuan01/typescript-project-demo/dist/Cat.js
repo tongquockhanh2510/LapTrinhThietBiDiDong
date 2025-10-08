@@ -6,9 +6,8 @@ class Cat extends Animal_1.Animal {
     meow() {
         console.log(`${this.name} says: Meow~`);
     }
-    speak() {
-        // override base implementation
-        console.log(`${this.name} meows: Meow~`);
+    makeSound() {
+        return "meows: Meow~";
     }
 }
 exports.Cat = Cat;
