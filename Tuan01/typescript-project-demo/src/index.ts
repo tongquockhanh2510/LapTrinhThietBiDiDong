@@ -61,3 +61,16 @@ const circle = new Circle(3);
 
 console.log(`Area of square: ${square.area()}`); 
 console.log(`Area of circle: ${circle.area().toFixed(2)}`);
+
+import { Manager } from "./Manager";
+import { Developer } from "./Developer";
+
+const mgr = new Manager("Alice", 90000, 5);
+mgr.manage();
+mgr.addBonus(5000);
+console.log(mgr.getInfo());
+
+const dev = new Developer("Bob", 70000, "JavaScript");
+dev.writeCode();
+dev.debug();
+console.log(dev.getInfo());
