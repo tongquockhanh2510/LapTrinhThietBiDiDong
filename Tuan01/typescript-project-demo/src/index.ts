@@ -22,6 +22,7 @@ import { Book } from "./Book";
 import { User } from "./User";
 import { Box } from "./Box";
 import { Logger } from "./Logger";
+import { MathUtil } from "./MathUtil";
 
 // Basic greeting
 console.log(hello("200Lab"));
@@ -118,3 +119,9 @@ logger.log("This is a log message");
 logger.info("This is an info message");
 logger.warn("This is a warning");
 logger.error("This is an error message");
+
+// MathUtil examples
+console.log("Math add:", MathUtil.add(2, 3));
+console.log("Math subtract:", MathUtil.subtract(5, 2));
+console.log("Math multiply:", MathUtil.multiply(4, 3));
+console.log("Math divide:", MathUtil.divide(10, 2));

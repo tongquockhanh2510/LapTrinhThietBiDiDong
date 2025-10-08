@@ -23,6 +23,7 @@ const Book_1 = require("./Book");
 const User_1 = require("./User");
 const Box_1 = require("./Box");
 const Logger_1 = require("./Logger");
+const MathUtil_1 = require("./MathUtil");
 // Basic greeting
 console.log(hello("200Lab"));
 // Person example
@@ -96,3 +97,8 @@ logger.log("This is a log message");
 logger.info("This is an info message");
 logger.warn("This is a warning");
 logger.error("This is an error message");
+// MathUtil examples
+console.log("Math add:", MathUtil_1.MathUtil.add(2, 3));
+console.log("Math subtract:", MathUtil_1.MathUtil.subtract(5, 2));
+console.log("Math multiply:", MathUtil_1.MathUtil.multiply(4, 3));
+console.log("Math divide:", MathUtil_1.MathUtil.divide(10, 2));
