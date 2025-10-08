@@ -103,3 +103,24 @@ Promise.race([tasks1, tasks2, tasks3])
             console.error("All tasks failed");
             console.error((err as Error).message);
         });
+
+
+const promiseChain = Promise.resolve(2)
+    .then((num) => {
+        console.log("Start with:", num);
+        return num *num;
+    })
+    .then((squanred)=>{
+        console.log("Squared:", squanred);
+        return squanred + 3;
+    })
+    .then((double)=>{
+        console.log("after doubling:", double);
+        return double *2;
+    })
+    .then((finalResult)=>{  
+        console.log("Final result:", finalResult);
+    })
+    .catch((err)=>{
+        console.error("Error in promise chain:", (err as Error).message);
+    });
