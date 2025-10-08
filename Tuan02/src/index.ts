@@ -17,17 +17,35 @@ async function runAsync() {
 
 runAsync();
 
-// Returns a Promise that resolves with the number 10 after 1 second
+
 function getTenAsync(): Promise<number> {
   return new Promise((resolve) => {
     setTimeout(() => resolve(10), 1000);
   });
 }
 
-// Small runner to verify the Promise
+
 async function runNumberAsync() {
   const num = await getTenAsync();
   console.log(num);
 }
 
+function rejectAfter1Second() :Promise<void>{
+  return new Promise((_resolve, reject) => {
+    setTimeout(() => {
+      reject(new Error("Something went wrong"));
+    }, 1000);
+  });
+}
+
+async function runRejectAsync() {
+  try {
+    await rejectAfter1Second();
+  } catch (err) {
+    // Log only the error message to show the rejection
+    console.error((err as Error).message);
+  }
+}
+
 runNumberAsync();
+runRejectAsync();

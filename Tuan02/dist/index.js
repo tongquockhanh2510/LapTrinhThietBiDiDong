@@ -22,17 +22,34 @@ function runAsync() {
     });
 }
 runAsync();
-// Returns a Promise that resolves with the number 10 after 1 second
 function getTenAsync() {
     return new Promise((resolve) => {
         setTimeout(() => resolve(10), 1000);
     });
 }
-// Small runner to verify the Promise
 function runNumberAsync() {
     return __awaiter(this, void 0, void 0, function* () {
         const num = yield getTenAsync();
         console.log(num);
     });
 }
+function rejectAfter1Second() {
+    return new Promise((_resolve, reject) => {
+        setTimeout(() => {
+            reject(new Error("Something went wrong"));
+        }, 1000);
+    });
+}
+function runRejectAsync() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            yield rejectAfter1Second();
+        }
+        catch (err) {
+            // Log only the error message to show the rejection
+            console.error(err.message);
+        }
+    });
+}
 runNumberAsync();
+runRejectAsync();
