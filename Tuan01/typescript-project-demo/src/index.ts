@@ -16,6 +16,7 @@ import { Fish } from "./Fish";
 import { Bird } from "./Bird";
 import { Square } from "./Square";
 import { Circle } from "./Circle";
+import { Shape } from "./Shape";
 import { Manager } from "./Manager";
 import { Developer } from "./Developer";
 import { Library } from "./Library";
@@ -89,6 +90,9 @@ console.log(`Area of square: ${square.area()}`);
 
 const circle = new Circle(3);
 console.log(`Area of circle: ${circle.area().toFixed(2)}`);
+
+// Static method demo on Shape
+console.log(Shape.describe());
 
 // Employee examples
 const mgr = new Manager("Alice", 90000, 5);

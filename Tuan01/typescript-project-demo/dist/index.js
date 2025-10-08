@@ -17,6 +17,7 @@ const Fish_1 = require("./Fish");
 const Bird_1 = require("./Bird");
 const Square_1 = require("./Square");
 const Circle_1 = require("./Circle");
+const Shape_1 = require("./Shape");
 const Manager_1 = require("./Manager");
 const Developer_1 = require("./Developer");
 const Library_1 = require("./Library");
@@ -73,6 +74,8 @@ const square = new Square_1.Square(4);
 console.log(`Area of square: ${square.area()}`);
 const circle = new Circle_1.Circle(3);
 console.log(`Area of circle: ${circle.area().toFixed(2)}`);
+// Static method demo on Shape
+console.log(Shape_1.Shape.describe());
 // Employee examples
 const mgr = new Manager_1.Manager("Alice", 90000, 5);
 mgr.manage();
