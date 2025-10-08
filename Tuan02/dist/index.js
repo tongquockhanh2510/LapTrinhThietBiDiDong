@@ -22,3 +22,17 @@ function runAsync() {
     });
 }
 runAsync();
+// Returns a Promise that resolves with the number 10 after 1 second
+function getTenAsync() {
+    return new Promise((resolve) => {
+        setTimeout(() => resolve(10), 1000);
+    });
+}
+// Small runner to verify the Promise
+function runNumberAsync() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const num = yield getTenAsync();
+        console.log(num);
+    });
+}
+runNumberAsync();

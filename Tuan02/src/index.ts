@@ -3,7 +3,7 @@ function hello(name: string): string {
 }
 
 
-console.log(hello("200Lab"));   
+console.log(hello("200Lab"));
 
 
 const helloAsync: Promise<string> = new Promise((resolve) => {
@@ -16,3 +16,18 @@ async function runAsync() {
 }
 
 runAsync();
+
+// Returns a Promise that resolves with the number 10 after 1 second
+function getTenAsync(): Promise<number> {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve(10), 1000);
+  });
+}
+
+// Small runner to verify the Promise
+async function runNumberAsync() {
+  const num = await getTenAsync();
+  console.log(num);
+}
+
+runNumberAsync();
