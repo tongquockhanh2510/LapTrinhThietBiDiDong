@@ -28,6 +28,9 @@ import { Bike } from "./Bike";
 import { Vehicle } from "./Vehicle";
 import { Repository } from "./Repository";
 import { Stack } from "./Stack";
+import { Payment } from "./Payment";
+import { CashPayment } from "./CashPayment";
+import { CardPayment } from "./CardPayment";
 
 // Basic greeting
 console.log(hello("200Lab"));
@@ -161,3 +164,10 @@ stack.push(2);
 console.log("Stack peek:", stack.peek());
 console.log("Stack pop:", stack.pop());
 console.log("Stack is empty:", stack.isEmpty());
+
+// Payment examples
+const cash: Payment = new CashPayment();
+cash.pay(50);
+
+const card: Payment = new CardPayment("1234567812345678");
+card.pay(120.5);

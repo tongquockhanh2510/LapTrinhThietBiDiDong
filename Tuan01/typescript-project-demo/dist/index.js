@@ -28,6 +28,8 @@ const MathUtil_1 = require("./MathUtil");
 const Bike_1 = require("./Bike");
 const Repository_1 = require("./Repository");
 const Stack_1 = require("./Stack");
+const CashPayment_1 = require("./CashPayment");
+const CardPayment_1 = require("./CardPayment");
 // Basic greeting
 console.log(hello("200Lab"));
 // Person example
@@ -131,3 +133,8 @@ stack.push(2);
 console.log("Stack peek:", stack.peek());
 console.log("Stack pop:", stack.pop());
 console.log("Stack is empty:", stack.isEmpty());
+// Payment examples
+const cash = new CashPayment_1.CashPayment();
+cash.pay(50);
+const card = new CardPayment_1.CardPayment("1234567812345678");
+card.pay(120.5);
