@@ -31,6 +31,7 @@ const Repository_1 = require("./Repository");
 const Stack_1 = require("./Stack");
 const CashPayment_1 = require("./CashPayment");
 const CardPayment_1 = require("./CardPayment");
+const Robot_1 = require("./Robot");
 const Order_1 = require("./Order");
 const Teacher_1 = require("./Teacher");
 const Fan_1 = require("./Fan");
@@ -123,6 +124,10 @@ bike.stop();
 console.log(bike.getInfo());
 const vehicles = [car, bike];
 vehicles.forEach(v => console.log(v.getInfo()));
+// Movable demo
+car.move(100);
+const robot = new Robot_1.Robot("R2-D2");
+robot.move(5);
 // Repository examples
 const bookRepo = new Repository_1.Repository();
 bookRepo.add(book1);

@@ -19,5 +19,8 @@ class Car {
     getInfo() {
         return `Brand: ${this.brand}, Model: ${this.model}, Year: ${this.year}`;
     }
+    move(distance) {
+        console.log(`${this.brand} moved ${distance} meters.`);
+    }
 }
 exports.Car = Car;

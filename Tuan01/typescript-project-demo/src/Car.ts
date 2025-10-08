@@ -1,6 +1,7 @@
 import { Vehicle } from "./Vehicle";
+import { Movable } from "./Movable";
 
-export class Car implements Vehicle {
+export class Car implements Vehicle, Movable {
     brand: String;
     model: String;
     year: number;
@@ -25,5 +26,9 @@ export class Car implements Vehicle {
 
     getInfo(): string {
         return `Brand: ${this.brand}, Model: ${this.model}, Year: ${this.year}`;
+    }
+
+    move(distance: number): void {
+        console.log(`${this.brand} moved ${distance} meters.`);
     }
 }

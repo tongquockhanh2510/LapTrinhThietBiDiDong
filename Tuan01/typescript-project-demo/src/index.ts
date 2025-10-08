@@ -32,6 +32,8 @@ import { Stack } from "./Stack";
 import { Payment } from "./Payment";
 import { CashPayment } from "./CashPayment";
 import { CardPayment } from "./CardPayment";
+import { Movable } from "./Movable";
+import { Robot } from "./Robot";
 import { Order } from "./Order";
 import { Teacher } from "./Teacher";
 import { Appliance } from "./Appliance";
@@ -154,6 +156,11 @@ console.log(bike.getInfo());
 
 const vehicles: Vehicle[] = [car, bike];
 vehicles.forEach(v => console.log(v.getInfo()));
+
+// Movable demo
+car.move(100);
+const robot = new Robot("R2-D2");
+robot.move(5);
 
 // Repository examples
 const bookRepo = new Repository<Book>();
