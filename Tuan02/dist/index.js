@@ -76,14 +76,30 @@ function simulate(time) {
 // simulate(2000)
 //     .then((message)=>console.log(message))
 //     .catch((err)=> console.error(err))
-const tasks1 = simulate(2000);
-const tasks2 = getRandomNumber();
-const tasks3 = simulate(1000);
-Promise.all([tasks1, tasks2, tasks3])
-    .then((results) => {
-    console.log("All tasks completed");
-    console.log(results);
-}).catch((err) => {
-    console.error("One of the tasks failed");
+function simulateTask(time, message) {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(message);
+        }, time);
+    });
+}
+const tasks1 = simulateTask(2000, "Task 1 done");
+const tasks2 = simulateTask(1500, "Task 2 done");
+const tasks3 = simulateTask(1000, "Task 3 done");
+// Promise.all([tasks1, tasks2, tasks3])
+//     .then((results) => {
+//         console.log("All tasks completed");
+//         console.log(results);
+//     }).catch((err) => {
+//         console.error("One of the tasks failed");
+//         console.error((err as Error).message);
+//     });
+Promise.race([tasks1, tasks2, tasks3])
+    .then((firstResult) => {
+    console.log("First task completed");
+    console.log(firstResult);
+})
+    .catch((err) => {
+    console.error("All tasks failed");
     console.error(err.message);
 });
