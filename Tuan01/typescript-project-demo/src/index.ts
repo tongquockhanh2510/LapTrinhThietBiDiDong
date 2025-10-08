@@ -26,6 +26,7 @@ import { Logger } from "./Logger";
 import { MathUtil } from "./MathUtil";
 import { Bike } from "./Bike";
 import { Vehicle } from "./Vehicle";
+import { Repository } from "./Repository";
 
 // Basic greeting
 console.log(hello("200Lab"));
@@ -141,3 +142,13 @@ console.log(bike.getInfo());
 
 const vehicles: Vehicle[] = [car, bike];
 vehicles.forEach(v => console.log(v.getInfo()));
+
+// Repository examples
+const bookRepo = new Repository<Book>();
+bookRepo.add(book1);
+bookRepo.add(book2);
+console.log("Books in repository:", bookRepo.getAll());
+
+const userRepo = new Repository<User>();
+userRepo.add(user1);
+console.log("Users in repository:", userRepo.getAll());

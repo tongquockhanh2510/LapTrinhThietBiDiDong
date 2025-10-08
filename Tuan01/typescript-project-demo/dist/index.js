@@ -26,6 +26,7 @@ const Box_1 = require("./Box");
 const Logger_1 = require("./Logger");
 const MathUtil_1 = require("./MathUtil");
 const Bike_1 = require("./Bike");
+const Repository_1 = require("./Repository");
 // Basic greeting
 console.log(hello("200Lab"));
 // Person example
@@ -114,3 +115,11 @@ bike.stop();
 console.log(bike.getInfo());
 const vehicles = [car, bike];
 vehicles.forEach(v => console.log(v.getInfo()));
+// Repository examples
+const bookRepo = new Repository_1.Repository();
+bookRepo.add(book1);
+bookRepo.add(book2);
+console.log("Books in repository:", bookRepo.getAll());
+const userRepo = new Repository_1.Repository();
+userRepo.add(user1);
+console.log("Users in repository:", userRepo.getAll());
