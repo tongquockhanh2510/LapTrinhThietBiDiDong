@@ -32,14 +32,14 @@ import { Stack } from "./Stack";
 import { Payment } from "./Payment";
 import { CashPayment } from "./CashPayment";
 import { CardPayment } from "./CardPayment";
+import { Order } from "./Order";
 import { Appliance } from "./Appliance";
 import { Fan } from "./Fan";
 import { AirConditioner } from "./AirConditioner";
 
-// Basic greeting
 console.log(hello("200Lab"));
 
-// Person example
+
 const person1 = new Person("Khanh", 18);
 person1.displayInfo();
 
@@ -185,3 +185,7 @@ fan.turnOn();
 
 const ac = new AirConditioner("Bedroom AC", 22);
 ac.turnOn();
+
+// Order example
+const order = new Order([new Product("Mouse", 25), new Product("Keyboard", 45)]);
+console.log("Order total:", order.totalPrice());

@@ -31,11 +31,10 @@ const Repository_1 = require("./Repository");
 const Stack_1 = require("./Stack");
 const CashPayment_1 = require("./CashPayment");
 const CardPayment_1 = require("./CardPayment");
+const Order_1 = require("./Order");
 const Fan_1 = require("./Fan");
 const AirConditioner_1 = require("./AirConditioner");
-// Basic greeting
 console.log(hello("200Lab"));
-// Person example
 const person1 = new Person_1.Person("Khanh", 18);
 person1.displayInfo();
 // Student example
@@ -148,3 +147,6 @@ const fan = new Fan_1.Fan("Living Room Fan", 3);
 fan.turnOn();
 const ac = new AirConditioner_1.AirConditioner("Bedroom AC", 22);
 ac.turnOn();
+// Order example
+const order = new Order_1.Order([new Product_1.Product("Mouse", 25), new Product_1.Product("Keyboard", 45)]);
+console.log("Order total:", order.totalPrice());
