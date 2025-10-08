@@ -33,6 +33,7 @@ import { Payment } from "./Payment";
 import { CashPayment } from "./CashPayment";
 import { CardPayment } from "./CardPayment";
 import { Order } from "./Order";
+import { Teacher } from "./Teacher";
 import { Appliance } from "./Appliance";
 import { Fan } from "./Fan";
 import { AirConditioner } from "./AirConditioner";
@@ -189,3 +190,8 @@ ac.turnOn();
 // Order example
 const order = new Order([new Product("Mouse", 25), new Product("Keyboard", 45)]);
 console.log("Order total:", order.totalPrice());
+
+// Teacher example
+const teacher = new Teacher("Ms. Lan", 30, "Mathematics");
+teacher.introduce();
+teacher.displayInfo();

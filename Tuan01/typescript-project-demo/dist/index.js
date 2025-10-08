@@ -32,6 +32,7 @@ const Stack_1 = require("./Stack");
 const CashPayment_1 = require("./CashPayment");
 const CardPayment_1 = require("./CardPayment");
 const Order_1 = require("./Order");
+const Teacher_1 = require("./Teacher");
 const Fan_1 = require("./Fan");
 const AirConditioner_1 = require("./AirConditioner");
 console.log(hello("200Lab"));
@@ -150,3 +151,7 @@ ac.turnOn();
 // Order example
 const order = new Order_1.Order([new Product_1.Product("Mouse", 25), new Product_1.Product("Keyboard", 45)]);
 console.log("Order total:", order.totalPrice());
+// Teacher example
+const teacher = new Teacher_1.Teacher("Ms. Lan", 30, "Mathematics");
+teacher.introduce();
+teacher.displayInfo();
