@@ -49,7 +49,15 @@ console.log(hello("200Lab"));
 
 // const cat = new Cat("Mimi");
 // cat.meow();
-const fish = new Fish();  
-fish.swim();  
-const bird = new Bird();
-bird.fly(); 
+// const fish = new Fish();  
+// fish.swim();  
+// const bird = new Bird();
+// bird.fly(); 
+import { Square } from "./Square";
+import { Circle } from "./Circle";
+
+const square = new Square(4);
+const circle = new Circle(3);
+
+console.log(`Area of square: ${square.area()}`); 
+console.log(`Area of circle: ${circle.area().toFixed(2)}`);

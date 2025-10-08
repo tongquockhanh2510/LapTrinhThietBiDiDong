@@ -3,8 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 function hello(name) {
     return `Hello, ${name}!`;
 }
-const Fish_1 = require("./Fish");
-const Bird_1 = require("./Bird");
 console.log(hello("200Lab"));
 //  const person1 = new Person("Khanh",18);
 //  person1.displayInfo();
@@ -31,7 +29,13 @@ console.log(hello("200Lab"));
 // dog.bark();
 // const cat = new Cat("Mimi");
 // cat.meow();
-const fish = new Fish_1.Fish();
-fish.swim();
-const bird = new Bird_1.Bird();
-bird.fly();
+// const fish = new Fish();  
+// fish.swim();  
+// const bird = new Bird();
+// bird.fly(); 
+const Square_1 = require("./Square");
+const Circle_1 = require("./Circle");
+const square = new Square_1.Square(4);
+const circle = new Circle_1.Circle(3);
+console.log(`Area of square: ${square.area()}`);
+console.log(`Area of circle: ${circle.area().toFixed(2)}`);
