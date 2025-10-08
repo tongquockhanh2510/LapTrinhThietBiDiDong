@@ -1,4 +1,10 @@
-interface Animal{
+export abstract class Animal {
     name: string;
-    sound(): void;
+
+    constructor(name: string) {
+        this.name = name;
+    }
+
+    // subclasses must implement how they make a sound
+    abstract sound(): void;
 }
