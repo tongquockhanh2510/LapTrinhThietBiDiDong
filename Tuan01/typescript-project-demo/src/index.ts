@@ -21,6 +21,7 @@ import { Library } from "./Library";
 import { Book } from "./Book";
 import { User } from "./User";
 import { Box } from "./Box";
+import { Logger } from "./Logger";
 
 // Basic greeting
 console.log(hello("200Lab"));
@@ -110,3 +111,10 @@ console.log("Box contains number:", numberBox.get());
 
 const stringBox = new Box<string>("hello box");
 console.log("Box contains string:", stringBox.get());
+
+// Logger (singleton) examples
+const logger = Logger.getInstance();
+logger.log("This is a log message");
+logger.info("This is an info message");
+logger.warn("This is a warning");
+logger.error("This is an error message");
