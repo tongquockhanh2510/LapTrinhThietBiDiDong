@@ -11,6 +11,7 @@ const BankAccount_1 = require("./BankAccount");
 const Product_1 = require("./Product");
 const Account_1 = require("./Account");
 const Dog_1 = require("./Dog");
+const Animal_1 = require("./Animal");
 const Cat_1 = require("./Cat");
 const Fish_1 = require("./Fish");
 const Bird_1 = require("./Bird");
@@ -102,3 +103,6 @@ console.log("Math add:", MathUtil_1.MathUtil.add(2, 3));
 console.log("Math subtract:", MathUtil_1.MathUtil.subtract(5, 2));
 console.log("Math multiply:", MathUtil_1.MathUtil.multiply(4, 3));
 console.log("Math divide:", MathUtil_1.MathUtil.divide(10, 2));
+// Polymorphism demo: treat Dog and Cat as Animal and call speak()
+const animals = [new Dog_1.Dog("Rex"), new Cat_1.Cat("Mimi"), new Animal_1.Animal("Generic")];
+animals.forEach(a => a.speak());

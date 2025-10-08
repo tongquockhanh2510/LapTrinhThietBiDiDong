@@ -10,6 +10,7 @@ import { BankAccount } from "./BankAccount";
 import { Product } from "./Product";
 import { Account } from "./Account";
 import { Dog } from "./Dog";
+import { Animal } from "./Animal";
 import { Cat } from "./Cat";
 import { Fish } from "./Fish";
 import { Bird } from "./Bird";
@@ -125,3 +126,7 @@ console.log("Math add:", MathUtil.add(2, 3));
 console.log("Math subtract:", MathUtil.subtract(5, 2));
 console.log("Math multiply:", MathUtil.multiply(4, 3));
 console.log("Math divide:", MathUtil.divide(10, 2));
+
+// Polymorphism demo: treat Dog and Cat as Animal and call speak()
+const animals: Animal[] = [new Dog("Rex"), new Cat("Mimi"), new Animal("Generic")];
+animals.forEach(a => a.speak());
