@@ -27,6 +27,7 @@ import { MathUtil } from "./MathUtil";
 import { Bike } from "./Bike";
 import { Vehicle } from "./Vehicle";
 import { Repository } from "./Repository";
+import { Stack } from "./Stack";
 
 // Basic greeting
 console.log(hello("200Lab"));
@@ -152,3 +153,11 @@ console.log("Books in repository:", bookRepo.getAll());
 const userRepo = new Repository<User>();
 userRepo.add(user1);
 console.log("Users in repository:", userRepo.getAll());
+
+// Stack example
+const stack = new Stack<number>();
+stack.push(1);
+stack.push(2);
+console.log("Stack peek:", stack.peek());
+console.log("Stack pop:", stack.pop());
+console.log("Stack is empty:", stack.isEmpty());

@@ -27,6 +27,7 @@ const Logger_1 = require("./Logger");
 const MathUtil_1 = require("./MathUtil");
 const Bike_1 = require("./Bike");
 const Repository_1 = require("./Repository");
+const Stack_1 = require("./Stack");
 // Basic greeting
 console.log(hello("200Lab"));
 // Person example
@@ -123,3 +124,10 @@ console.log("Books in repository:", bookRepo.getAll());
 const userRepo = new Repository_1.Repository();
 userRepo.add(user1);
 console.log("Users in repository:", userRepo.getAll());
+// Stack example
+const stack = new Stack_1.Stack();
+stack.push(1);
+stack.push(2);
+console.log("Stack peek:", stack.peek());
+console.log("Stack pop:", stack.pop());
+console.log("Stack is empty:", stack.isEmpty());
