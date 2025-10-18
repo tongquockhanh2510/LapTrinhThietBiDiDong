@@ -1,0 +1,28 @@
+{
+  "license": "0BSD",
+  "main": "index.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "expo": "~53.0.22",
+    "expo-status-bar": "~2.2.3",
+    "react": "19.0.0",
+    "react-native": "0.79.6",
+    "@expo/vector-icons": "^14.1.0",
+    "react-native-macos": "^0.61.0",
+    "react-native-paper": "4.9.2",
+    "expo-linear-gradient": "~14.1.5",
+    "react-native-otp-inputs": "*",
+    "react-native-vector-icons": "*",
+    "@react-native-clipboard/clipboard": "*",
+    "@twotalltotems/react-native-otp-input": "*"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0"
+  },
+  "private": true
+}
