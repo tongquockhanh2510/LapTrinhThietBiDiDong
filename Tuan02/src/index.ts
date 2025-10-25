@@ -124,3 +124,148 @@ const promiseChain = Promise.resolve(2)
     .catch((err)=>{
         console.error("Error in promise chain:", (err as Error).message);
     });
+
+function filterNumbers(arr: number[]){
+    return new Promise((resolve, reject)=>{
+        setTimeout(()=>{
+            if(!Array.isArray(arr)){
+                reject("Input is not an array");    
+            }
+            else{
+                const evenNumbers = arr.filter(num => num % 2 === 0);
+                resolve(evenNumbers);
+            }
+        }, 1000);
+    });
+}
+filterNumbers([1,2,3,4,5,6])
+    .then((evenNumbers)=> console.log("Even numbers:", evenNumbers))
+    .catch((err)=> console.error("Error:", err));
+
+const myPromise  = new Promise((resolve,  reject)=>{
+    const success = Math.random()> 0.5;
+    setTimeout(()=>{
+        if(success){
+            resolve("Task completed successfuly");
+        } else{
+            reject("Task failed");
+        }
+    },1000)
+});
+
+// myPromise
+//     .then(result => console.log("Success:", result))
+//     .catch(err => console.error("Error:", err))
+//     .finally(()=> console.log("Done"));
+
+// runAsync();
+
+async function asyncSimulateTask() {
+   const result = await simulate(2000);
+    console.log(result);
+    
+}
+
+// asyncSimulateTask();
+
+async function runAsyncWithError() {
+    try{
+        const message = await getRandomNumber();
+        console.log("success", message);
+    }catch(error){
+        console.error("Error",error);
+    }finally{
+        console.log("Done");
+    }
+}
+// runAsyncWithError();
+
+
+async function takeNumber1Second(so : number) :Promise<number>{
+    return new Promise((resolve)=>{
+        setTimeout(() => {
+            resolve(so*3);
+        }, 1000);
+    });    
+}
+
+async function run14() {
+    const result14 = await takeNumber1Second(5);
+  console.log(result14);
+}
+// run14();
+
+async function task(name : string, time :  number) {
+    return  new Promise((resolve)=>{
+        setTimeout(()=>{
+            resolve(`${name} complete`);
+        },time);
+    })
+}
+
+async function runMutilTask() {
+    const result1  = await task("task1",  1000);
+    console.log(result1);
+
+    const result2  = await task("task2",  1000);
+    console.log(result2);
+    const result3  = await task("task3",  1000);
+    console.log(result3);
+    const result4  = await task("task4",  1000);
+    console.log(result4);
+}
+
+// runMutilTask()
+
+async function runParallelTasks() {
+    const tasks  = await Promise.all([
+        task("task1",1000),
+        task("task2",1500),
+        task("task3",100),
+    ]);
+    
+     for await (const result of tasks) {
+    console.log(result);
+  }
+}
+
+// runParallelTasks()
+
+async function fetchUser(id: number): Promise<{id: number; name: string}> {
+    const randomDelay = Math.random() *3000;
+    const apiCall = new Promise <{id: number; name: string}>((resolve)=>{
+        setTimeout(()=>{
+            resolve({id, name: `User_${id}`});
+        },randomDelay);
+    });
+
+    const  timeout = new Promise<never>((_,reject)=>{
+        setTimeout(()=> reject(new  Error("Request  time out")), 2000);
+    });
+
+    return Promise.race([apiCall, timeout]);
+}
+
+// (async ()=>{
+//     const user = await fetchUser(1);
+//     console.log(user);
+// })();
+
+async function fetchUsers(ids:  number[]) {
+    const promises = ids.map(id=> fetchUser(id));
+    const users = await Promise.all(promises);
+    return  users;
+}
+// (async ()=>{
+//     const result = await fetchUsers([1,2,3])
+//     console.log(result);
+// })();
+
+(async () => {
+  try {
+    const user = await fetchUser(1);
+    console.log(" User:", user);
+  } catch (err) {
+    console.error(" Error:", (err as Error).message);
+  }
+})();
