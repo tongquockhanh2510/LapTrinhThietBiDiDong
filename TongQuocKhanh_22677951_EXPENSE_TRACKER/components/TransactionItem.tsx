@@ -9,9 +9,10 @@ import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 interface TransactionItemProps {
   transaction: Transaction;
   onDeleted?: () => void;
+  onLongPress?: () => void;
 }
 
-export default function TransactionItem({ transaction, onDeleted }: TransactionItemProps) {
+export default function TransactionItem({ transaction, onDeleted, onLongPress }: TransactionItemProps) {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
   const router = useRouter();
@@ -49,6 +50,13 @@ export default function TransactionItem({ transaction, onDeleted }: TransactionI
   };
 
   const handleLongPress = () => {
+    // If custom onLongPress is provided (for restore in trash), use it
+    if (onLongPress) {
+      onLongPress();
+      return;
+    }
+
+    // Otherwise, show delete confirmation
     Alert.alert(
       'Xóa giao dịch',
       `Bạn có chắc muốn xóa "${transaction.title}"?`,

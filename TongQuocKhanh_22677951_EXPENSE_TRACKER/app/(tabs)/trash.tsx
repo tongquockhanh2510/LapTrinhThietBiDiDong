@@ -1,12 +1,12 @@
 import TransactionItem from '@/components/TransactionItem';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import { getDeletedTransactions } from '@/services/database';
+import { getDeletedTransactions, restoreTransaction } from '@/services/database';
 import { Transaction } from '@/types/transaction';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from 'expo-router';
 import React, { useCallback, useMemo, useState } from 'react';
-import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, FlatList, RefreshControl, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function TrashScreen() {
@@ -16,6 +16,7 @@ export default function TrashScreen() {
   const [deletedTransactions, setDeletedTransactions] = useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [refreshing, setRefreshing] = useState(false);
 
   // Reload deleted transactions when screen comes into focus
   useFocusEffect(
@@ -36,6 +37,12 @@ export default function TrashScreen() {
     }
   };
 
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await loadDeletedTransactions();
+    setRefreshing(false);
+  }, []);
+
   // Filter deleted transactions based on search query
   const filteredDeletedTransactions = useMemo(() => {
     if (!searchQuery.trim()) {
@@ -50,8 +57,39 @@ export default function TrashScreen() {
     );
   }, [deletedTransactions, searchQuery]);
 
+  const handleRestore = (transaction: Transaction) => {
+    Alert.alert(
+      'Khôi phục giao dịch',
+      `Bạn có muốn khôi phục "${transaction.title}"?`,
+      [
+        {
+          text: 'Hủy',
+          style: 'cancel',
+        },
+        {
+          text: 'Khôi phục',
+          style: 'default',
+          onPress: async () => {
+            try {
+              await restoreTransaction(transaction.id);
+              await loadDeletedTransactions();
+              Alert.alert('Thành công', 'Đã khôi phục giao dịch');
+            } catch (error) {
+              console.error('Failed to restore transaction:', error);
+              Alert.alert('Lỗi', 'Không thể khôi phục giao dịch');
+            }
+          },
+        },
+      ]
+    );
+  };
+
   const renderTransaction = ({ item }: { item: Transaction }) => (
-    <TransactionItem transaction={item} onDeleted={loadDeletedTransactions} />
+    <TransactionItem 
+      transaction={item} 
+      onDeleted={loadDeletedTransactions}
+      onLongPress={() => handleRestore(item)}
+    />
   );
 
   return (
@@ -115,6 +153,14 @@ export default function TrashScreen() {
                 keyExtractor={(item) => item.id.toString()}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.listContent}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                    colors={[colors.tint]}
+                    tintColor={colors.tint}
+                  />
+                }
               />
             )}
           </View>
