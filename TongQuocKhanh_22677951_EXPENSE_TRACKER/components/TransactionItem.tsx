@@ -1,8 +1,9 @@
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { Transaction } from '@/types/transaction';
+import { useRouter } from 'expo-router';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface TransactionItemProps {
   transaction: Transaction;
@@ -11,6 +12,7 @@ interface TransactionItemProps {
 export default function TransactionItem({ transaction }: TransactionItemProps) {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
+  const router = useRouter();
 
   const isIncome = transaction.type === 'Thu';
   const typeColor = isIncome ? '#4CAF50' : '#F44336';
@@ -32,8 +34,24 @@ export default function TransactionItem({ transaction }: TransactionItemProps) {
     return amount.toLocaleString('vi-VN');
   };
 
+  const handlePress = () => {
+    router.push({
+      pathname: '/edit-transaction',
+      params: {
+        id: transaction.id,
+        title: transaction.title,
+        amount: transaction.amount.toString(),
+        type: transaction.type,
+      },
+    });
+  };
+
   return (
-    <View style={[styles.container, { backgroundColor: colors.background, borderColor: colors.icon }]}>
+    <TouchableOpacity 
+      style={[styles.container, { backgroundColor: colors.background, borderColor: colors.icon }]}
+      onPress={handlePress}
+      activeOpacity={0.7}
+    >
       <View style={styles.leftSection}>
         <View style={[styles.typeIndicator, { backgroundColor: typeColor }]} />
         <View style={styles.infoContainer}>
@@ -56,7 +74,7 @@ export default function TransactionItem({ transaction }: TransactionItemProps) {
           {amountPrefix}{formatAmount(transaction.amount)} ₫
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 
