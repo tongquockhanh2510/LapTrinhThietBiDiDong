@@ -1,53 +1,61 @@
 import TransactionItem from '@/components/TransactionItem';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { getAllTransactions, initDatabase } from '@/services/database';
 import { Transaction } from '@/types/transaction';
-import React from 'react';
+import { useFocusEffect, useRouter } from 'expo-router';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
+  const router = useRouter();
 
-  // Sample data for demonstration
-  const sampleTransactions: Transaction[] = [
-    {
-      id: 1,
-      title: 'Lương tháng 11',
-      amount: 15000000,
-      createdAt: new Date(2025, 10, 1, 9, 0).toISOString(),
-      type: 'Thu',
-    },
-    {
-      id: 2,
-      title: 'Mua sắm tạp hóa',
-      amount: 500000,
-      createdAt: new Date(2025, 10, 1, 10, 30).toISOString(),
-      type: 'Chi',
-    },
-    {
-      id: 3,
-      title: 'Tiền điện tháng 10',
-      amount: 350000,
-      createdAt: new Date(2025, 10, 1, 14, 15).toISOString(),
-      type: 'Chi',
-    },
-    {
-      id: 4,
-      title: 'Bán đồ cũ',
-      amount: 1200000,
-      createdAt: new Date(2025, 10, 1, 16, 45).toISOString(),
-      type: 'Thu',
-    },
-    {
-      id: 5,
-      title: 'Ăn uống',
-      amount: 200000,
-      createdAt: new Date(2025, 10, 1, 19, 0).toISOString(),
-      type: 'Chi',
-    },
-  ];
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isDatabaseReady, setIsDatabaseReady] = useState(false);
+
+  // Initialize database on component mount
+  useEffect(() => {
+    const setupDatabase = async () => {
+      try {
+        await initDatabase();
+        setIsDatabaseReady(true);
+        await loadTransactions();
+      } catch (error) {
+        console.error('Failed to setup database:', error);
+      }
+    };
+
+    setupDatabase();
+  }, []);
+
+  // Reload transactions when screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      if (isDatabaseReady) {
+        loadTransactions();
+      }
+    }, [isDatabaseReady])
+  );
+
+  const loadTransactions = async () => {
+    try {
+      setIsLoading(true);
+      const data = await getAllTransactions();
+      setTransactions(data);
+    } catch (error) {
+      console.error('Failed to load transactions:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleAddTransaction = () => {
+    router.push('/add-transaction');
+  };
 
   const renderTransaction = ({ item }: { item: Transaction }) => (
     <TransactionItem transaction={item} />
@@ -70,6 +78,7 @@ export default function HomeScreen() {
           <View style={styles.buttonContainer}>
             <TouchableOpacity 
               style={[styles.addButton, { backgroundColor: colors.tint }]}
+              onPress={handleAddTransaction}
             >
               <Text style={styles.addButtonText}>+ Thêm Thu/Chi</Text>
             </TouchableOpacity>
@@ -79,13 +88,21 @@ export default function HomeScreen() {
             <Text style={[styles.listTitle, { color: colors.text }]}>
               Danh sách giao dịch
             </Text>
-            <FlatList
-              data={sampleTransactions}
-              renderItem={renderTransaction}
-              keyExtractor={(item) => item.id.toString()}
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={styles.listContent}
-            />
+            {isLoading ? (
+              <Text style={[styles.emptyText, { color: colors.icon }]}>Đang tải...</Text>
+            ) : transactions.length === 0 ? (
+              <Text style={[styles.emptyText, { color: colors.icon }]}>
+                Chưa có giao dịch nào. Nhấn nút "Thêm Thu/Chi" để bắt đầu!
+              </Text>
+            ) : (
+              <FlatList
+                data={transactions}
+                renderItem={renderTransaction}
+                keyExtractor={(item) => item.id.toString()}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={styles.listContent}
+              />
+            )}
           </View>
         </View>
       </View>
@@ -156,5 +173,10 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingBottom: 20,
+  },
+  emptyText: {
+    fontSize: 16,
+    textAlign: 'center',
+    marginTop: 40,
   },
 });
