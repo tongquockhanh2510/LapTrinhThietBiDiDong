@@ -24,6 +24,7 @@ export default function HomeScreen() {
   const [showSyncModal, setShowSyncModal] = useState(false);
   const [apiUrl, setApiUrl] = useState('');
   const [isSyncing, setIsSyncing] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState<'all' | 'Thu' | 'Chi'>('all');
 
   // Initialize database on component mount
   useEffect(() => {
@@ -143,19 +144,27 @@ export default function HomeScreen() {
     );
   };
 
-  // Filter transactions based on search query
+  // Filter transactions based on search query and selected filter
   const filteredTransactions = useMemo(() => {
-    if (!searchQuery.trim()) {
-      return transactions;
+    let result = transactions;
+    
+    // Filter by type
+    if (selectedFilter !== 'all') {
+      result = result.filter(transaction => transaction.type === selectedFilter);
     }
     
-    const query = searchQuery.toLowerCase().trim();
-    return transactions.filter(transaction => 
-      transaction.title.toLowerCase().includes(query) ||
-      transaction.amount.toString().includes(query) ||
-      transaction.type.toLowerCase().includes(query)
-    );
-  }, [transactions, searchQuery]);
+    // Filter by search query
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase().trim();
+      result = result.filter(transaction => 
+        transaction.title.toLowerCase().includes(query) ||
+        transaction.amount.toString().includes(query) ||
+        transaction.type.toLowerCase().includes(query)
+      );
+    }
+    
+    return result;
+  }, [transactions, searchQuery, selectedFilter]);
 
   const renderTransaction = ({ item }: { item: Transaction }) => (
     <TransactionItem transaction={item} onDeleted={loadTransactions} />
@@ -209,6 +218,75 @@ export default function HomeScreen() {
                 <Ionicons name="close-circle" size={20} color={colors.icon} />
               </TouchableOpacity>
             )}
+          </View>
+
+          {/* Filter Bar */}
+          <View style={styles.filterContainer}>
+            <TouchableOpacity 
+              style={[
+                styles.filterButton,
+                selectedFilter === 'all' && styles.filterButtonActive,
+                { borderColor: colors.icon },
+                selectedFilter === 'all' && { backgroundColor: colors.tint, borderColor: colors.tint }
+              ]}
+              onPress={() => setSelectedFilter('all')}
+            >
+              <Ionicons 
+                name="list-outline" 
+                size={18} 
+                color={selectedFilter === 'all' ? '#fff' : colors.text} 
+              />
+              <Text style={[
+                styles.filterButtonText,
+                { color: selectedFilter === 'all' ? '#fff' : colors.text }
+              ]}>
+                Tất cả
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              style={[
+                styles.filterButton,
+                selectedFilter === 'Thu' && styles.filterButtonActive,
+                { borderColor: colors.icon },
+                selectedFilter === 'Thu' && { backgroundColor: '#4CAF50', borderColor: '#4CAF50' }
+              ]}
+              onPress={() => setSelectedFilter('Thu')}
+            >
+              <Ionicons 
+                name="arrow-down-circle-outline" 
+                size={18} 
+                color={selectedFilter === 'Thu' ? '#fff' : '#4CAF50'} 
+              />
+              <Text style={[
+                styles.filterButtonText,
+                { color: selectedFilter === 'Thu' ? '#fff' : '#4CAF50' }
+              ]}>
+                Thu
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              style={[
+                styles.filterButton,
+                selectedFilter === 'Chi' && styles.filterButtonActive,
+                { borderColor: colors.icon },
+                selectedFilter === 'Chi' && { backgroundColor: '#F44336', borderColor: '#F44336' }
+              ]}
+              onPress={() => setSelectedFilter('Chi')}
+            >
+              <Ionicons 
+                name="arrow-up-circle-outline" 
+                size={18} 
+                color={selectedFilter === 'Chi' ? '#fff' : '#F44336'} 
+              />
+              <Text style={[
+                styles.filterButtonText,
+                { color: selectedFilter === 'Chi' ? '#fff' : '#F44336' }
+              ]}>
+                Chi
+              </Text>
+            </TouchableOpacity>
           </View>
 
           <View style={styles.listContainer}>
@@ -382,6 +460,29 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     paddingVertical: 0,
+  },
+  filterContainer: {
+    flexDirection: 'row',
+    gap: 10,
+    marginBottom: 20,
+  },
+  filterButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    gap: 6,
+  },
+  filterButtonActive: {
+    // Background color set dynamically
+  },
+  filterButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
   },
   listContainer: {
     flex: 1,
