@@ -1,12 +1,57 @@
+import TransactionItem from '@/components/TransactionItem';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { Transaction } from '@/types/transaction';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
+
+  // Sample data for demonstration
+  const sampleTransactions: Transaction[] = [
+    {
+      id: 1,
+      title: 'Lương tháng 11',
+      amount: 15000000,
+      createdAt: new Date(2025, 10, 1, 9, 0).toISOString(),
+      type: 'Thu',
+    },
+    {
+      id: 2,
+      title: 'Mua sắm tạp hóa',
+      amount: 500000,
+      createdAt: new Date(2025, 10, 1, 10, 30).toISOString(),
+      type: 'Chi',
+    },
+    {
+      id: 3,
+      title: 'Tiền điện tháng 10',
+      amount: 350000,
+      createdAt: new Date(2025, 10, 1, 14, 15).toISOString(),
+      type: 'Chi',
+    },
+    {
+      id: 4,
+      title: 'Bán đồ cũ',
+      amount: 1200000,
+      createdAt: new Date(2025, 10, 1, 16, 45).toISOString(),
+      type: 'Thu',
+    },
+    {
+      id: 5,
+      title: 'Ăn uống',
+      amount: 200000,
+      createdAt: new Date(2025, 10, 1, 19, 0).toISOString(),
+      type: 'Chi',
+    },
+  ];
+
+  const renderTransaction = ({ item }: { item: Transaction }) => (
+    <TransactionItem transaction={item} />
+  );
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
@@ -34,7 +79,13 @@ export default function HomeScreen() {
             <Text style={[styles.listTitle, { color: colors.text }]}>
               Danh sách giao dịch
             </Text>
-            {/* List will be added here */}
+            <FlatList
+              data={sampleTransactions}
+              renderItem={renderTransaction}
+              keyExtractor={(item) => item.id.toString()}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={styles.listContent}
+            />
           </View>
         </View>
       </View>
@@ -102,5 +153,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     marginBottom: 12,
+  },
+  listContent: {
+    paddingBottom: 20,
   },
 });

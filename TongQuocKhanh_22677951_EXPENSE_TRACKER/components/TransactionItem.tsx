@@ -1,0 +1,119 @@
+import { Colors } from '@/constants/theme';
+import { useColorScheme } from '@/hooks/use-color-scheme';
+import { Transaction } from '@/types/transaction';
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+
+interface TransactionItemProps {
+  transaction: Transaction;
+}
+
+export default function TransactionItem({ transaction }: TransactionItemProps) {
+  const colorScheme = useColorScheme();
+  const colors = Colors[colorScheme ?? 'light'];
+
+  const isIncome = transaction.type === 'Thu';
+  const typeColor = isIncome ? '#4CAF50' : '#F44336';
+  const amountPrefix = isIncome ? '+' : '-';
+
+  // Format date
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${day}/${month}/${year} ${hours}:${minutes}`;
+  };
+
+  // Format amount with thousand separators
+  const formatAmount = (amount: number) => {
+    return amount.toLocaleString('vi-VN');
+  };
+
+  return (
+    <View style={[styles.container, { backgroundColor: colors.background, borderColor: colors.icon }]}>
+      <View style={styles.leftSection}>
+        <View style={[styles.typeIndicator, { backgroundColor: typeColor }]} />
+        <View style={styles.infoContainer}>
+          <Text style={[styles.title, { color: colors.text }]} numberOfLines={1}>
+            {transaction.title}
+          </Text>
+          <Text style={[styles.date, { color: colors.icon }]}>
+            {formatDate(transaction.createdAt)}
+          </Text>
+        </View>
+      </View>
+      
+      <View style={styles.rightSection}>
+        <View style={[styles.typeBadge, { backgroundColor: typeColor + '20' }]}>
+          <Text style={[styles.typeText, { color: typeColor }]}>
+            {transaction.type}
+          </Text>
+        </View>
+        <Text style={[styles.amount, { color: typeColor }]}>
+          {amountPrefix}{formatAmount(transaction.amount)} ₫
+        </Text>
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 16,
+    marginVertical: 4,
+    marginHorizontal: 8,
+    borderRadius: 12,
+    borderWidth: 1,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+  },
+  leftSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    marginRight: 12,
+  },
+  typeIndicator: {
+    width: 4,
+    height: 48,
+    borderRadius: 2,
+    marginRight: 12,
+  },
+  infoContainer: {
+    flex: 1,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 4,
+  },
+  date: {
+    fontSize: 12,
+  },
+  rightSection: {
+    alignItems: 'flex-end',
+  },
+  typeBadge: {
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12,
+    marginBottom: 6,
+  },
+  typeText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  amount: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+});
