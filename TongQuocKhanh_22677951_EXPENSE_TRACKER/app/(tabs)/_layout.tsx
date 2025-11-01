@@ -24,6 +24,13 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="trash"
+        options={{
+          title: 'Trash',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="trash" color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="explore"
         options={{
           title: 'Statistics',

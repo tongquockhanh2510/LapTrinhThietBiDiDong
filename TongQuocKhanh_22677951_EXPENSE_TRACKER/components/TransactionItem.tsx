@@ -1,15 +1,17 @@
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { deleteTransaction } from '@/services/database';
 import { Transaction } from '@/types/transaction';
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface TransactionItemProps {
   transaction: Transaction;
+  onDeleted?: () => void;
 }
 
-export default function TransactionItem({ transaction }: TransactionItemProps) {
+export default function TransactionItem({ transaction, onDeleted }: TransactionItemProps) {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
   const router = useRouter();
@@ -46,10 +48,38 @@ export default function TransactionItem({ transaction }: TransactionItemProps) {
     });
   };
 
+  const handleLongPress = () => {
+    Alert.alert(
+      'Xóa giao dịch',
+      `Bạn có chắc muốn xóa "${transaction.title}"?`,
+      [
+        {
+          text: 'Hủy',
+          style: 'cancel',
+        },
+        {
+          text: 'Xóa',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await deleteTransaction(transaction.id);
+              Alert.alert('Thành công', 'Đã xóa giao dịch!');
+              onDeleted?.();
+            } catch (error) {
+              console.error('Error deleting transaction:', error);
+              Alert.alert('Lỗi', 'Không thể xóa giao dịch!');
+            }
+          },
+        },
+      ]
+    );
+  };
+
   return (
     <TouchableOpacity 
       style={[styles.container, { backgroundColor: colors.background, borderColor: colors.icon }]}
       onPress={handlePress}
+      onLongPress={handleLongPress}
       activeOpacity={0.7}
     >
       <View style={styles.leftSection}>

@@ -4,9 +4,10 @@ import { useColorScheme } from '@/hooks/use-color-scheme';
 import { getAllTransactions, initDatabase } from '@/services/database';
 import { Transaction } from '@/types/transaction';
 import { useFocusEffect, useRouter } from 'expo-router';
-import React, { useCallback, useEffect, useState } from 'react';
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function HomeScreen() {
   const colorScheme = useColorScheme();
@@ -16,6 +17,7 @@ export default function HomeScreen() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isDatabaseReady, setIsDatabaseReady] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Initialize database on component mount
   useEffect(() => {
@@ -57,8 +59,22 @@ export default function HomeScreen() {
     router.push('/add-transaction');
   };
 
+  // Filter transactions based on search query
+  const filteredTransactions = useMemo(() => {
+    if (!searchQuery.trim()) {
+      return transactions;
+    }
+    
+    const query = searchQuery.toLowerCase().trim();
+    return transactions.filter(transaction => 
+      transaction.title.toLowerCase().includes(query) ||
+      transaction.amount.toString().includes(query) ||
+      transaction.type.toLowerCase().includes(query)
+    );
+  }, [transactions, searchQuery]);
+
   const renderTransaction = ({ item }: { item: Transaction }) => (
-    <TransactionItem transaction={item} />
+    <TransactionItem transaction={item} onDeleted={loadTransactions} />
   );
 
   return (
@@ -84,19 +100,36 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </View>
 
+          {/* Search Bar */}
+          <View style={[styles.searchContainer, { backgroundColor: colors.background, borderColor: colors.icon }]}>
+            <Ionicons name="search" size={20} color={colors.icon} />
+            <TextInput
+              style={[styles.searchInput, { color: colors.text }]}
+              placeholder="Tìm kiếm giao dịch..."
+              placeholderTextColor={colors.icon}
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+            />
+            {searchQuery.length > 0 && (
+              <TouchableOpacity onPress={() => setSearchQuery('')}>
+                <Ionicons name="close-circle" size={20} color={colors.icon} />
+              </TouchableOpacity>
+            )}
+          </View>
+
           <View style={styles.listContainer}>
             <Text style={[styles.listTitle, { color: colors.text }]}>
-              Danh sách giao dịch
+              Danh sách giao dịch {searchQuery ? `(${filteredTransactions.length})` : `(${transactions.length})`}
             </Text>
             {isLoading ? (
               <Text style={[styles.emptyText, { color: colors.icon }]}>Đang tải...</Text>
-            ) : transactions.length === 0 ? (
+            ) : filteredTransactions.length === 0 ? (
               <Text style={[styles.emptyText, { color: colors.icon }]}>
-                Chưa có giao dịch nào. Nhấn nút "Thêm Thu/Chi" để bắt đầu!
+                {searchQuery ? 'Không tìm thấy giao dịch nào' : 'Chưa có giao dịch nào. Nhấn nút "Thêm Thu/Chi" để bắt đầu!'}
               </Text>
             ) : (
               <FlatList
-                data={transactions}
+                data={filteredTransactions}
                 renderItem={renderTransaction}
                 keyExtractor={(item) => item.id.toString()}
                 showsVerticalScrollIndicator={false}
@@ -162,6 +195,21 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginBottom: 20,
+    gap: 8,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 16,
+    paddingVertical: 0,
   },
   listContainer: {
     flex: 1,
