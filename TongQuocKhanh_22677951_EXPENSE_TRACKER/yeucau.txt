@@ -1,0 +1,57 @@
+
+Đề bài: Tạo ứng dụng EXPENSE TRACKER dùng Sqlite và API. Ứng dụng quản lý chi tiêu cá nhân — ghi lại các khoản thu/chi, xem thống kê, và đồng bộ dữ liệu lên MockAPI.
+
+Yêu cầu:
+-	Commit từng câu sau khi làm xong
+-	Chụp hình từng câu làm minh chứng sau khi vừa Code xong câu đó (chụp full màn hình-có ngày giờ)
+Câu 1.	Giao diện và Cấu trúc (1đ)
+a.	Toàn bộ app phải được bọc trong SafeAreaProvider.
+b.	Màn hình chính sử dụng SafeAreaView và View để bố trí layout.
+c.	Tiêu đề trên cùng: “EXPENSE TRACKER".
+d.	Tự thiết kế để chương trình sử dụng một cách thuận tiện nhất.
+Câu 2.	Tạo Item để hiển thị Thu-Chi (1đ)
+
+Mỗi item hiển thị:
+a.	Tên khoản chi (title) 
+b.	Số tiền (amount) 
+c.	Ngày tạo (createdAt)
+d.	Loại (Thu / Chi)
+Câu 3.	(Dùng SQLite) Thêm công việc mới vào DB (1đ)
+a.	Khi nhấn vào Item sẽ chuyển sang một Screen mới
+b.	Có nút "Add".
+c.	Khi bấm “Save”, lưu vào SQLite DB.
+d.	Sau khi thêm, x nội dung trong ô nhập (dùng useRef để clear).
+
+Câu 4.	(Dùng SQLite) Cập nhật công việc (PUT) (1đ)
+a.	Khi nhấn vào một item, chuyển sang một Screen mới
+b.	Sửa xong → bấm nút "Save" để gọi function sửa 
+c.	Cập nhật lại danh sách.
+
+Câu 5.	(Dùng SQLite) Xoá Item (DELETE) (1đ)
+a.	Khi chạm lâu vào một Item thì sẽ xuất hiện Menu Xóa
+b.	Xác nhận trong hộp thoại trước khi xóa.
+c.	Tạo màn hình TrashScreen hiển thị các khoản đã xóa.
+Câu 6.	Chức năng tìm kiếm (1đ)
+a.	Thêm tính năng tìm kiếm trong List thu chi
+b.	Thêm tính năng tìm kiếm trong List thu chi đã xóa
+
+Câu 7.	Refresh danh sách (0,5đ)
+a.	Thêm tính năng kéo xuống để làm mới (pull to refresh) bằng RefreshControl.
+b.	Khi refresh, gọi lại function GET để lấy danh sách mới.
+
+Câu 8.	Tính năng khôi phục (restore) (0,5đ)
+a.	Khi chạm lâu vào một Item thu chi trong tin nhắn đã xóa, sẽ xuất hiện menu khôi phục lại tin nhắn.
+
+Câu 9.	Tính năng đồng bộ (1đ)
+a.	Khi nhấn nút đồng bộ trong chương trình thì chương trình sẽ xóa toàn bộ data trong API, sau đó copy toàn bộ thống kê thu chi vào API có link sẵn trong chương trình.
+b.	Cho phép người sử dụng paste link (Link https://mockapi.io/ tự tạo để đồng bộ) theo cấu trúc table mà chương trình đưa ra.
+
+Câu 10.	Phân loại thu/chi (FILTER) (1 điểm)
+a.	Thêm thanh chọn:
+o	“Tất cả” / “Thu” / “Chi”
+b.	Khi chọn, lọc danh sách hiển thị tương ứng.
+
+Câu 11.	Biểu đồ thống kê thu/chi (Chart) (0,5 điểm)
+a.	Màn hình StatisticsScreen: hiển thị biểu đồ tổng thu – tổng chi theo tháng.
+
+Câu 12.	Dùng EAS build của Sinh viên một bản Preview  rồi nộp lại link (tạo file text copy link bỏ vào) (0,5 đ)
