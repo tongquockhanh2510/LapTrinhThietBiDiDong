@@ -4,4 +4,5 @@ export interface Transaction {
   amount: number;
   createdAt: string;
   type: 'Thu' | 'Chi';
+  isDeleted?: number; // 0 or 1 in SQLite
 }

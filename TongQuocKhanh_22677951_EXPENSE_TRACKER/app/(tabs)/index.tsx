@@ -1,12 +1,14 @@
 import TransactionItem from '@/components/TransactionItem';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { getApiBaseUrl, setApiBaseUrl, syncTransactionsToAPI } from '@/services/api';
 import { getAllTransactions, initDatabase } from '@/services/database';
 import { Transaction } from '@/types/transaction';
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect, useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { FlatList, RefreshControl, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, FlatList, Modal, RefreshControl, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
@@ -19,6 +21,9 @@ export default function HomeScreen() {
   const [isDatabaseReady, setIsDatabaseReady] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [refreshing, setRefreshing] = useState(false);
+  const [showSyncModal, setShowSyncModal] = useState(false);
+  const [apiUrl, setApiUrl] = useState('');
+  const [isSyncing, setIsSyncing] = useState(false);
 
   // Initialize database on component mount
   useEffect(() => {
@@ -27,6 +32,13 @@ export default function HomeScreen() {
         await initDatabase();
         setIsDatabaseReady(true);
         await loadTransactions();
+        
+        // Load saved API URL
+        const savedUrl = await AsyncStorage.getItem('mockapi_url');
+        if (savedUrl) {
+          setApiUrl(savedUrl);
+          setApiBaseUrl(savedUrl);
+        }
       } catch (error) {
         console.error('Failed to setup database:', error);
       }
@@ -66,6 +78,71 @@ export default function HomeScreen() {
     setRefreshing(false);
   }, []);
 
+  const handleSyncPress = () => {
+    setShowSyncModal(true);
+  };
+
+  const handleSaveApiUrl = async () => {
+    if (!apiUrl.trim()) {
+      Alert.alert('Lỗi', 'Vui lòng nhập URL API');
+      return;
+    }
+
+    try {
+      await AsyncStorage.setItem('mockapi_url', apiUrl);
+      setApiBaseUrl(apiUrl);
+      Alert.alert('Thành công', 'Đã lưu URL API');
+      setShowSyncModal(false);
+    } catch (error) {
+      console.error('Failed to save API URL:', error);
+      Alert.alert('Lỗi', 'Không thể lưu URL API');
+    }
+  };
+
+  const handleSync = async () => {
+    const currentApiUrl = getApiBaseUrl() || apiUrl.trim();
+    
+    if (!currentApiUrl) {
+      Alert.alert('Lỗi', 'Vui lòng nhập và lưu URL API trước khi đồng bộ');
+      return;
+    }
+
+    Alert.alert(
+      'Xác nhận đồng bộ',
+      'Thao tác này sẽ xóa toàn bộ dữ liệu trên API và upload lại từ thiết bị. Bạn có chắc chắn?',
+      [
+        {
+          text: 'Hủy',
+          style: 'cancel',
+        },
+        {
+          text: 'Đồng bộ',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              setIsSyncing(true);
+              setShowSyncModal(false);
+              
+              // Make sure API URL is set
+              setApiBaseUrl(currentApiUrl);
+              
+              // Only sync non-deleted transactions
+              const activeTransactions = transactions.filter(t => !t.isDeleted);
+              await syncTransactionsToAPI(activeTransactions);
+              
+              Alert.alert('Thành công', `Đã đồng bộ ${activeTransactions.length} giao dịch lên API`);
+            } catch (error) {
+              console.error('Sync failed:', error);
+              Alert.alert('Lỗi', 'Không thể đồng bộ dữ liệu. Vui lòng kiểm tra URL API');
+            } finally {
+              setIsSyncing(false);
+            }
+          },
+        },
+      ]
+    );
+  };
+
   // Filter transactions based on search query
   const filteredTransactions = useMemo(() => {
     if (!searchQuery.trim()) {
@@ -90,6 +167,16 @@ export default function HomeScreen() {
         {/* Header */}
         <View style={[styles.header, { backgroundColor: colors.tint }]}>
           <Text style={styles.headerTitle}>EXPENSE TRACKER</Text>
+          <TouchableOpacity 
+            style={styles.syncButton}
+            onPress={handleSyncPress}
+            disabled={isSyncing}
+            activeOpacity={0.7}
+          >
+            <View style={styles.syncIconContainer}>
+              <Ionicons name={isSyncing ? "sync" : "cloud-upload-outline"} size={26} color="#fff" />
+            </View>
+          </TouchableOpacity>
         </View>
 
         {/* Main Content */}
@@ -154,6 +241,64 @@ export default function HomeScreen() {
           </View>
         </View>
       </View>
+
+      {/* Sync Modal */}
+      <Modal
+        visible={showSyncModal}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setShowSyncModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.modalContent, { backgroundColor: colors.background }]}>
+            <View style={styles.modalHeader}>
+              <Text style={[styles.modalTitle, { color: colors.text }]}>Đồng bộ với MockAPI</Text>
+              <TouchableOpacity onPress={() => setShowSyncModal(false)}>
+                <Ionicons name="close" size={28} color={colors.text} />
+              </TouchableOpacity>
+            </View>
+
+            <Text style={[styles.modalLabel, { color: colors.text }]}>URL API:</Text>
+            <TextInput
+              style={[styles.modalInput, { 
+                backgroundColor: colorScheme === 'dark' ? '#2c2c2c' : '#f5f5f5',
+                color: colors.text,
+                borderColor: colors.icon
+              }]}
+              value={apiUrl}
+              onChangeText={setApiUrl}
+              placeholder="https://your-id.mockapi.io/api/v1/transactions"
+              placeholderTextColor={colors.icon}
+              autoCapitalize="none"
+              autoCorrect={false}
+            />
+
+            <Text style={[styles.modalInfo, { color: colors.icon }]}>
+              <Ionicons name="information-circle-outline" size={16} color={colors.icon} />
+              {' '}Nhập URL endpoint từ MockAPI.io của bạn
+            </Text>
+
+            <View style={styles.modalButtons}>
+              <TouchableOpacity 
+                style={[styles.modalButton, styles.saveButton, { backgroundColor: colors.tint }]}
+                onPress={handleSaveApiUrl}
+              >
+                <Ionicons name="save-outline" size={20} color="#fff" />
+                <Text style={styles.buttonText}>Lưu URL</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity 
+                style={[styles.modalButton, styles.syncButtonModal, { backgroundColor: '#4CAF50' }]}
+                onPress={handleSync}
+                disabled={!apiUrl.trim()}
+              >
+                <Ionicons name="cloud-upload-outline" size={20} color="#fff" />
+                <Text style={styles.buttonText}>Đồng bộ</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -175,6 +320,18 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
+    flexDirection: 'row',
+  },
+  syncButton: {
+    position: 'absolute',
+    right: 16,
+  },
+  syncIconContainer: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    padding: 10,
+    borderRadius: 25,
+    borderWidth: 2,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
   },
   headerTitle: {
     fontSize: 24,
@@ -241,5 +398,74 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
     marginTop: 40,
+  },
+  // Modal styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    width: '90%',
+    maxWidth: 400,
+    borderRadius: 16,
+    padding: 24,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  modalLabel: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 8,
+  },
+  modalInput: {
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 14,
+    marginBottom: 12,
+  },
+  modalInfo: {
+    fontSize: 14,
+    marginBottom: 20,
+    lineHeight: 20,
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  modalButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    borderRadius: 8,
+    gap: 8,
+  },
+  saveButton: {
+    // backgroundColor set dynamically
+  },
+  syncButtonModal: {
+    // backgroundColor set dynamically
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
