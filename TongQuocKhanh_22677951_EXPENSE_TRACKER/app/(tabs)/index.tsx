@@ -3,11 +3,11 @@ import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { getAllTransactions, initDatabase } from '@/services/database';
 import { Transaction } from '@/types/transaction';
+import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { FlatList, RefreshControl, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
 
 export default function HomeScreen() {
   const colorScheme = useColorScheme();
@@ -18,6 +18,7 @@ export default function HomeScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [isDatabaseReady, setIsDatabaseReady] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [refreshing, setRefreshing] = useState(false);
 
   // Initialize database on component mount
   useEffect(() => {
@@ -58,6 +59,12 @@ export default function HomeScreen() {
   const handleAddTransaction = () => {
     router.push('/add-transaction');
   };
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await loadTransactions();
+    setRefreshing(false);
+  }, []);
 
   // Filter transactions based on search query
   const filteredTransactions = useMemo(() => {
@@ -134,6 +141,14 @@ export default function HomeScreen() {
                 keyExtractor={(item) => item.id.toString()}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.listContent}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                    colors={[colors.tint]}
+                    tintColor={colors.tint}
+                  />
+                }
               />
             )}
           </View>

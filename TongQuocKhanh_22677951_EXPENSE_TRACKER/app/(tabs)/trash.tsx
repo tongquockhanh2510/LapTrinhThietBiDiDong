@@ -15,6 +15,7 @@ export default function TrashScreen() {
 
   const [deletedTransactions, setDeletedTransactions] = useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Reload deleted transactions when screen comes into focus
   useFocusEffect(
@@ -34,6 +35,20 @@ export default function TrashScreen() {
       setIsLoading(false);
     }
   };
+
+  // Filter deleted transactions based on search query
+  const filteredDeletedTransactions = useMemo(() => {
+    if (!searchQuery.trim()) {
+      return deletedTransactions;
+    }
+    
+    const query = searchQuery.toLowerCase().trim();
+    return deletedTransactions.filter(transaction => 
+      transaction.title.toLowerCase().includes(query) ||
+      transaction.amount.toString().includes(query) ||
+      transaction.type.toLowerCase().includes(query)
+    );
+  }, [deletedTransactions, searchQuery]);
 
   const renderTransaction = ({ item }: { item: Transaction }) => (
     <TransactionItem transaction={item} onDeleted={loadDeletedTransactions} />
@@ -57,28 +72,45 @@ export default function TrashScreen() {
             </Text>
           </View>
 
+          {/* Search Bar */}
+          <View style={[styles.searchContainer, { backgroundColor: colors.background, borderColor: colors.icon }]}>
+            <Ionicons name="search" size={20} color={colors.icon} />
+            <TextInput
+              style={[styles.searchInput, { color: colors.text }]}
+              placeholder="Tìm kiếm trong thùng rác..."
+              placeholderTextColor={colors.icon}
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+            />
+            {searchQuery.length > 0 && (
+              <TouchableOpacity onPress={() => setSearchQuery('')}>
+                <Ionicons name="close-circle" size={20} color={colors.icon} />
+              </TouchableOpacity>
+            )}
+          </View>
+
           <View style={styles.listContainer}>
             <Text style={[styles.listTitle, { color: colors.text }]}>
-              Danh sách đã xóa ({deletedTransactions.length})
+              Danh sách đã xóa {searchQuery ? `(${filteredDeletedTransactions.length})` : `(${deletedTransactions.length})`}
             </Text>
             {isLoading ? (
               <View style={styles.emptyContainer}>
                 <Ionicons name="reload-circle-outline" size={60} color={colors.icon} />
                 <Text style={[styles.emptyText, { color: colors.icon }]}>Đang tải...</Text>
               </View>
-            ) : deletedTransactions.length === 0 ? (
+            ) : filteredDeletedTransactions.length === 0 ? (
               <View style={styles.emptyContainer}>
                 <Ionicons name="trash-outline" size={80} color={colors.icon} />
                 <Text style={[styles.emptyText, { color: colors.icon }]}>
-                  Thùng rác trống
+                  {searchQuery ? 'Không tìm thấy giao dịch nào' : 'Thùng rác trống'}
                 </Text>
                 <Text style={[styles.emptySubtext, { color: colors.icon }]}>
-                  Chưa có giao dịch nào bị xóa
+                  {searchQuery ? 'Thử tìm kiếm với từ khóa khác' : 'Chưa có giao dịch nào bị xóa'}
                 </Text>
               </View>
             ) : (
               <FlatList
-                data={deletedTransactions}
+                data={filteredDeletedTransactions}
                 renderItem={renderTransaction}
                 keyExtractor={(item) => item.id.toString()}
                 showsVerticalScrollIndicator={false}
@@ -132,12 +164,27 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
     padding: 12,
     borderRadius: 8,
-    marginBottom: 20,
+    marginBottom: 16,
     gap: 8,
   },
   infoText: {
     fontSize: 14,
     flex: 1,
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginBottom: 20,
+    gap: 8,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 16,
+    paddingVertical: 0,
   },
   listContainer: {
     flex: 1,
