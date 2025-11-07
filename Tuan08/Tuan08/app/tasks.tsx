@@ -9,7 +9,16 @@ import { Alert, FlatList, Image, StyleSheet, TextInput, TouchableOpacity, View }
 export default function TasksScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
-  const { tasks, userName, toggleTask, deleteTask } = useTaskContext();
+  const { 
+    tasks, 
+    userName, 
+    toggleTask, 
+    deleteTask,
+    syncStatus,
+    syncToCloud,
+    syncFromCloud,
+    getLastSyncText,
+  } = useTaskContext();
 
   const filteredTasks = tasks.filter((task) =>
     task.title.toLowerCase().includes(searchQuery.toLowerCase())
@@ -22,6 +31,24 @@ export default function TasksScreen() {
       [
         { text: 'Cancel', style: 'cancel' },
         { text: 'Delete', style: 'destructive', onPress: () => deleteTask(id) },
+      ]
+    );
+  };
+
+  const handleSync = () => {
+    Alert.alert(
+      'Sync Options',
+      'Choose sync direction:',
+      [
+        { 
+          text: 'Upload to Cloud', 
+          onPress: () => syncToCloud(),
+        },
+        { 
+          text: 'Download from Cloud', 
+          onPress: () => syncFromCloud(),
+        },
+        { text: 'Cancel', style: 'cancel' },
       ]
     );
   };
@@ -45,6 +72,36 @@ export default function TasksScreen() {
             <ThemedText style={styles.subGreeting}>Have a great day ahead</ThemedText>
           </View>
         </View>
+
+        {/* Sync Button */}
+        <TouchableOpacity 
+          onPress={() => router.push('/sync-settings')}
+          style={styles.syncButton}
+          disabled={syncStatus.isSyncing}
+        >
+          <MaterialIcons 
+            name={syncStatus.isSyncing ? 'sync' : 'cloud-sync'} 
+            size={28} 
+            color={syncStatus.error ? '#FF6B6B' : '#4CAF50'}
+          />
+        </TouchableOpacity>
+      </View>
+
+      {/* Sync Status */}
+      <View style={styles.syncStatusBar}>
+        <MaterialIcons 
+          name={syncStatus.error ? 'cloud-off' : 'cloud-done'} 
+          size={16} 
+          color={syncStatus.error ? '#FF6B6B' : '#4CAF50'} 
+        />
+        <ThemedText style={[
+          styles.syncStatusText,
+          syncStatus.error && styles.syncErrorText
+        ]}>
+          {syncStatus.isSyncing ? 'Syncing...' : 
+           syncStatus.error ? `Error: ${syncStatus.error}` :
+           `Last sync: ${getLastSyncText()}`}
+        </ThemedText>
       </View>
 
       {/* Search Bar */}
@@ -126,6 +183,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
+    flex: 1,
+  },
+  syncButton: {
+    padding: 8,
+  },
+  syncingIcon: {
+    transform: [{ rotate: '360deg' }],
+  },
+  syncStatusBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    backgroundColor: '#F5F5F5',
+    gap: 8,
+  },
+  syncStatusText: {
+    fontSize: 12,
+    color: '#666',
+  },
+  syncErrorText: {
+    color: '#FF6B6B',
   },
   avatar: {
     width: 50,
